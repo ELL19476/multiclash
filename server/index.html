@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Multiclash</title>
+</head>
+<body>
+    <div id="board">
+        <h1>No Unity Build Connected!</h1>
+    </div>
+</body>
+<script src="logic.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    var color = "";
+
+    function pollRoom() {
+        let room = prompt("enter room number: ");
+        socket.emit("server:client:start", room, (response) => {
+            if(response.status != 200) {
+                let error;
+                switch(response.status) {
+                    case 404: error = "Invalid room number"; break;
+                    default: error = "There was an error: " + response.message;
+                };
+                alert(error);
+                pollRoom();
+            } else {
+                color = response.color;
+            }
+        });
+    }
+    pollRoom();
+
+  
+    function onPlace(x, y) {
+        let promise = new Promise((resolve, reject) => {
+            socket.emit("server:client:board:onplace", {x: x, y: y}, color, (response) => {
+                // Unity build got message
+                console.log(response.status);
+                resolve();
+            });    
+        });
+        return promise;
+    }
+
+    socket.on("client:board:update", (boardSize) => {
+        console.log("board generated: " + boardSize);
+        generateBoard(boardSize.y, boardSize.x);
+    });
+    socket.on("client:board:onplace", (coordinates, color) => {
+        let board = document.getElementById("board");
+        let row = board.children[coordinates.y];
+        let square = row.children[coordinates.x];
+        
+        place(square, color);
+    });
+    socket.on("client:quit", () => {
+        alert("DISCONNECTED");
+        location.reload();
+    });
+</script>
+</html>
