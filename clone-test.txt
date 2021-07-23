@@ -1,0 +1,4 @@
+bernado hat es erfolgreich geschafft das Projekt zu clonen.
+
+...
+Weitere Personen mögen sich ebenfalls, nach dem Clonen des Projektes, hier eintragen und die Datei pushen.
