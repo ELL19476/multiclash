@@ -14,7 +14,7 @@ public class Test : MonoBehaviour
     readonly Dictionary<string, string> RECIVE = new Dictionary<string, string>{ { "START", "unity:start" }, { "PLACE", "unity:board:onplace" } };
     readonly Dictionary<string, string> EMIT = new Dictionary<string, string> { { "START", "server:unity:start" }, { "UPDATEBOARD", "server:unity:board:update" }, { "PLACE", "unity:board:onplace" } };
 
-    SocketIO server;
+    SocketIO server; 
 
     BoardGeneration board;
 

@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -6,11 +7,13 @@
     <link rel="stylesheet" href="/style.css">
     <title>Multiclash</title>
 </head>
+
 <body>
     <div id="board">
         <h1>No Unity Build Connected!</h1>
     </div>
 </body>
+<script src="card.js"></script>
 <script src="logic.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -20,9 +23,9 @@
     function pollRoom() {
         let room = prompt("enter room number: ");
         socket.emit("server:client:start", room, (response) => {
-            if(response.status != 200) {
+            if (response.status != 200) {
                 let error;
-                switch(response.status) {
+                switch (response.status) {
                     case 404: error = "Invalid room number"; break;
                     default: error = "There was an error: " + response.message;
                 };
@@ -35,14 +38,14 @@
     }
     pollRoom();
 
-  
+
     function onPlace(x, y) {
         let promise = new Promise((resolve, reject) => {
-            socket.emit("server:client:board:onplace", {x: x, y: y}, color, (response) => {
+            socket.emit("server:client:board:onplace", { x: x, y: y }, color, (response) => {
                 // Unity build got message
                 console.log(response.status);
                 resolve();
-            });    
+            });
         });
         return promise;
     }
@@ -55,7 +58,7 @@
         let board = document.getElementById("board");
         let row = board.children[coordinates.y];
         let square = row.children[coordinates.x];
-        
+
         place(square, color);
     });
     socket.on("client:quit", () => {
@@ -63,4 +66,5 @@
         location.reload();
     });
 </script>
+
 </html>
